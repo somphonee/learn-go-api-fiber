@@ -21,6 +21,7 @@ app.Get("/books/:id",getBook)
 app.Post("/books",createBook)
 app.Put("books/:id",updateBook)
 app.Delete("books/:id",deleteBook)
+app.Post("/upload",uploadFile)
 app.Listen(":8080")
 
 }
