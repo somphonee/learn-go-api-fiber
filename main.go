@@ -3,6 +3,8 @@ package main
 import (
  "github.com/gofiber/fiber/v2"
  "github.com/gofiber/template/html/v2"
+  "github.com/joho/godotenv"
+   "log"
 )
 
 // Book struct to hold book data
@@ -13,6 +15,10 @@ type Book struct {
 }
 var books []Book // Slice to store books
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+	  log.Fatal("Error loading .env file")
+	}
 engine := html.New("./views", ".html")
 app := fiber.New(fiber.Config{
     Views: engine,
@@ -28,8 +34,9 @@ app.Post("/books",createBook)
 app.Put("books/:id",updateBook)
 app.Delete("books/:id",deleteBook)
 app.Post("/upload",uploadFile)
-
 app.Get("/renderTemplate", renderTemplate)
+app.Get("/getConfig", getConfig)
+
 app.Listen(":8080")
 
 }
