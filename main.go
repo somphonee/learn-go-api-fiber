@@ -11,6 +11,8 @@ import (
 	"github.com/gofiber/template/html/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/joho/godotenv"
+	  "github.com/gofiber/swagger"
+  _ "github.com/somphonee/go-fiber-test/docs"
 )
 
 // Book struct to hold book dsata
@@ -32,6 +34,15 @@ func checkMiddleware(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+// @title Book API
+// @description This is a sample server for a book API.
+// @version 1.0
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -42,13 +53,12 @@ app := fiber.New(fiber.Config{
     Views: engine,
   })
 
-
+app.Get("/swagger/*", swagger.HandlerDefault)
 books = append(books, Book{ID: 1,Title: "SPDev",Author: "sp"})
 books = append(books, Book{ID: 2,Title: "SP",Author: "sp"})
 
 app.Post("/login", login)
 
-app.Use(checkMiddleware)
 // JWT Middleware
 app.Use(jwtware.New(jwtware.Config{
 	SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
@@ -91,7 +101,7 @@ var memberUser = User {
 	// Create the Claims
 	claims := jwt.MapClaims{
 		"email": user.Email,
-		"role": "admin",
+		"role":"admin",
 		"exp":   time.Now().Add(time.Hour * 72).Unix(),
 	}
 
